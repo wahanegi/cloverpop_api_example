@@ -3,7 +3,7 @@
 class PagesController < ApplicationController
   include HTTParty
 
-  def home;end
+  def home; end
 
   def init_data
     api_url = "#{ENV['CLOVERPOP_DOMAIN']}/api/v1/decisions"
