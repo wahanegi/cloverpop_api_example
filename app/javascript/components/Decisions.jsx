@@ -9,11 +9,11 @@ const Decisions = ({ decisions }) => {
       {!isEmpty(decisions) && (
         <div className='mb-3'>
           <h4 className='mt-3 text-center'>Decisions</h4>
-          {decisions.map((decision) => (
+          {decisions.map((decision, index) => (
             <div
               className='card py-1 px-3 m-2 mx-auto'
               style={{ borderRadius: 8 }}
-              key={decision.id}
+              key={index}
             >
               <div className='text-start truncated p-1'>
                 <Link style={{ textDecoration: 'none' }}

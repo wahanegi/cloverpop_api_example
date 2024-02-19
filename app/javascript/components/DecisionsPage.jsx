@@ -12,8 +12,8 @@ export const BtnPrimary = ({ text, hidden, onClick, disabled }) =>
     {text}
   </Button>
 
-const onCreateDecision = (decision, setDecisions, setLoaded, setDecision,
-                          setError, setSelectedTemplate, setSelectedUser) => {
+const onCreateDecision = (decision, setDecisions, setLoaded, setDecision, setError,
+                          setSelectedTemplate, setSelectedUser, setSelectedCollaborators) => {
   const url = '/create_decision';
   createCsrfToken()
   setLoaded(false)
@@ -26,6 +26,7 @@ const onCreateDecision = (decision, setDecisions, setLoaded, setDecision,
       setDecision({})
       setSelectedUser([])
       setSelectedTemplate([])
+      setSelectedCollaborators([])
       setLoaded(true)
     })
     .catch(error => {
@@ -33,6 +34,7 @@ const onCreateDecision = (decision, setDecisions, setLoaded, setDecision,
       setError(error)
       setSelectedUser([])
       setSelectedTemplate([])
+      setSelectedCollaborators([])
       setLoaded(true)
     });
 };
@@ -55,9 +57,9 @@ const DecisionsPage = () => {
 
   useEffect(() => {
     setDecision(Object.assign({}, decision, {
-      template_slug: selectedTemplate[0]?.slug,
+      template_id: selectedTemplate[0]?.template_id,
       user_email: selectedManager[0]?.email,
-      collaborators: selectedCollaborators
+      collaborators: selectedCollaborators.map(user => user.email)
     }))
   }, [selectedTemplate, selectedManager, selectedCollaborators])
 
@@ -76,7 +78,7 @@ const DecisionsPage = () => {
   }, []);
 
   if(!loaded) return <Loader />
-  if(isPresent(error)) return <h1>Error: {error}</h1>
+  if(isPresent(error)) return <p>Error: {error}</p>
 
   return loaded && <div className="container mt-5">
     <div className="row d-flex justify-content-center align-items-center">
@@ -112,7 +114,7 @@ const DecisionsPage = () => {
               <Form.Label className='fs-6 mb-0'>Decision manager</Form.Label>
               <Typeahead
                 id="typeahead-users"
-                labelKey={option => `${option?.first_name} ${option?.last_name}`}
+                labelKey={user => `${user.name}`}
                 onChange={setSelectedManager}
                 options={users || []}
                 placeholder="Select a user..."
@@ -121,24 +123,24 @@ const DecisionsPage = () => {
             </Form.Group>
 
             <Form.Group className='mb-3 text-start'>
-              <Form.Label className='fs-6 mb-0'>Decisions' collaborators</Form.Label>
+              <Form.Label className='fs-6 mb-0'>Collaborators of decision</Form.Label>
               <Typeahead
                 id="typeahead-collaborators"
                 multiple
-                labelKey={option => `${option?.first_name} ${option?.last_name}`}
+                labelKey={user => `${user.name}`}
                 onChange={setSelectedCollaborators}
                 options={users || []}
-                placeholder="Select a user..."
+                placeholder="Select collaborators of decision..."
                 selected={selectedCollaborators}
               />
             </Form.Group>
 
             <div className='mt-3 text-end'>
               <BtnPrimary text='Create Decision'
-                          disabled={isEmptyStr(decision.description) || isEmptyStr(decision.template_slug) || isEmptyStr(decision.user_email)}
+                          disabled={isEmptyStr(decision.description) || isEmptyStr(decision.template_id) || isEmptyStr(decision.user_email)}
                           onClick={() => onCreateDecision(
                             decision, setDecisions, setLoaded, setDecision, setError,
-                            setSelectedTemplate, setSelectedManager
+                            setSelectedTemplate, setSelectedManager, setSelectedCollaborators
                           )} />
             </div>
           </Form>
