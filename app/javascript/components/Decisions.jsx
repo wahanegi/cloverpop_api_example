@@ -17,7 +17,7 @@ const Decisions = ({ decisions }) => {
             >
               <div className='text-start truncated p-1'>
                 <Link style={{ textDecoration: 'none' }}
-                      to={decision.link} target='_blank' rel='noopener noreferrer'>
+                      to={decision.decision_url} target='_blank' rel='noopener noreferrer'>
                   {decision.description}
                 </Link>
               </div>
