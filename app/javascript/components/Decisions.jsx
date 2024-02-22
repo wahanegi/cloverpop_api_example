@@ -16,6 +16,7 @@ const Decisions = ({ decisions }) => {
               key={index}
             >
               <div className='text-start truncated p-1'>
+                <span>Your decision has been started!&nbsp;</span>
                 <Link style={{ textDecoration: 'none' }}
                       to={decision.decision_url} target='_blank' rel='noopener noreferrer'>
                   {decision.description}
