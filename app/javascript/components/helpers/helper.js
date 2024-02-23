@@ -1,12 +1,11 @@
-export function isBlank(obj) {
-  return typeof obj === 'undefined' || obj === null || (typeof obj === 'object' && Object.keys(obj).length === 0);
-}
-
 export function isPresent(obj) {
-  return typeof obj !== 'undefined' && obj !== null && !(typeof obj === 'object' && Object.keys(obj).length === 0);
+  return !isBlank(obj)
 }
 
-export function isEmpty(value) {
+export function isBlank(value) {
+  if (typeof value === 'undefined' || value === null) {
+    return true;
+  }
   if (typeof value === 'string') {
     return value.trim() === '';
   }
@@ -16,5 +15,5 @@ export function isEmpty(value) {
   if (typeof value === 'object') {
     return Object.keys(value).length === 0;
   }
-  return isBlank(value);
+  return false;
 }

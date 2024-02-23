@@ -1,10 +1,10 @@
 import {Link} from "react-router-dom";
 import React from "react";
-import {isEmpty} from "./helpers/helper";
+import {isPresent} from "./helpers/helper";
 
 const Decisions = ({ decisions }) =>
   <div>
-    {!isEmpty(decisions) && (
+    {isPresent(decisions) && (
       <div className='mb-3'>
         <h4 className='mt-3 text-center'>Decisions</h4>
         {decisions.map((decision, index) => (

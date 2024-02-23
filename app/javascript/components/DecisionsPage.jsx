@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import Form from "react-bootstrap/Form";
 import Loader from "./Loader";
-import {isEmpty, isPresent} from "./helpers/helper";
+import {isBlank, isPresent} from "./helpers/helper";
 import {Button} from "react-bootstrap";
 import Decisions from "./Decisions";
 import {Typeahead} from "react-bootstrap-typeahead";
@@ -100,7 +100,7 @@ const DecisionsPage = () => {
 
             <div className='mt-3 text-end'>
               <BtnPrimary text='Create Decision'
-                          disabled={isEmpty(decision.description) || isEmpty(decision.template_id) || isEmpty(decision.user_email)}
+                          disabled={isBlank(decision.description) || isBlank(decision.template_id) || isBlank(decision.user_email)}
                           onClick={() => createDecisionRequest(
                             decision, setDecisions, setLoaded, setDecision, setError,
                             setSelectedTemplate, setSelectedManager, setSelectedCollaborators
