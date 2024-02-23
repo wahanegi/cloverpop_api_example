@@ -1,43 +1,16 @@
 import React, {useState, useEffect} from 'react';
 import Form from "react-bootstrap/Form";
-import axios from 'axios';
 import Loader from "./Loader";
-import {createCsrfToken, isEmptyStr, isPresent} from "./helpers/helper";
+import {isEmpty, isPresent} from "./helpers/helper";
 import {Button} from "react-bootstrap";
 import Decisions from "./Decisions";
 import {Typeahead} from "react-bootstrap-typeahead";
+import {createDecisionRequest, getInitDataRequest} from "./helpers/requests";
 
 export const BtnPrimary = ({ text, hidden, onClick, disabled }) =>
   <Button onClick={onClick} style={{backgroundColor: '#6A1B9A', border: 'none'}} hidden={hidden} disabled={disabled}>
     {text}
   </Button>
-
-const onCreateDecision = (decision, setDecisions, setLoaded, setDecision, setError,
-                          setSelectedTemplate, setSelectedUser, setSelectedCollaborators) => {
-  const url = '/create_decision';
-  createCsrfToken()
-  setLoaded(false)
-
-  axios.post(url, { decision })
-    .then(response => {
-      console.log('response', response)
-      setDecisions(prev => [response.data.data.decision, ...prev])
-      setError(response.data.data.error)
-      setDecision({})
-      setSelectedUser([])
-      setSelectedTemplate([])
-      setSelectedCollaborators([])
-      setLoaded(true)
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      setError(error)
-      setSelectedUser([])
-      setSelectedTemplate([])
-      setSelectedCollaborators([])
-      setLoaded(true)
-    });
-};
 
 const DecisionsPage = () => {
   const [templates, setTemplates] = useState([])
@@ -64,17 +37,7 @@ const DecisionsPage = () => {
   }, [selectedTemplate, selectedManager, selectedCollaborators])
 
   useEffect(() => {
-    const url = `/init_data`;
-    axios.get(url)
-      .then(res => {
-        console.log('res', res)
-        setTemplates(res.data.data.templates)
-        setUsers(res.data.data.users)
-        setOrg(res.data.data.org)
-        setError(res.data.data.error)
-        setLoaded(true)
-      })
-      .catch(error => {console.error('Error:', error);});
+    getInitDataRequest(setTemplates, setUsers, setOrg, setError, setLoaded)
   }, []);
 
   if(!loaded) return <Loader />
@@ -137,8 +100,8 @@ const DecisionsPage = () => {
 
             <div className='mt-3 text-end'>
               <BtnPrimary text='Create Decision'
-                          disabled={isEmptyStr(decision.description) || isEmptyStr(decision.template_id) || isEmptyStr(decision.user_email)}
-                          onClick={() => onCreateDecision(
+                          disabled={isEmpty(decision.description) || isEmpty(decision.template_id) || isEmpty(decision.user_email)}
+                          onClick={() => createDecisionRequest(
                             decision, setDecisions, setLoaded, setDecision, setError,
                             setSelectedTemplate, setSelectedManager, setSelectedCollaborators
                           )} />

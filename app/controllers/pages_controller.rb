@@ -3,15 +3,18 @@
 class PagesController < ApplicationController
   include HTTParty
 
+  CLOVERPOP_DOMAIN = ENV['CLOVERPOP_DOMAIN'].freeze
+  CLOVERPOP_ORG_API_TOKEN = ENV['CLOVERPOP_ORG_API_TOKEN'].freeze
+
   def home; end
 
   def init_data
-    api_url = "#{ENV['CLOVERPOP_DOMAIN']}/api/v1/decisions"
+    api_url = "#{CLOVERPOP_DOMAIN}/api/v1/decisions"
     make_api_request(api_url, :get)
   end
 
   def create_decision
-    api_url = "#{ENV['CLOVERPOP_DOMAIN']}/api/v1/decisions"
+    api_url = "#{CLOVERPOP_DOMAIN}/api/v1/decisions"
     body = { decision: params['decision'] }
     make_api_request(api_url, :post, body)
   end
@@ -27,10 +30,9 @@ class PagesController < ApplicationController
   end
 
   def headers
-    api_key = ENV['CLOVERPOP_ORG_API_TOKEN']
     {
       'Content-Type' => 'application/json',
-      'Authorization' => api_key.to_s
+      'Authorization' => CLOVERPOP_ORG_API_TOKEN.to_s
     }
   end
 end
