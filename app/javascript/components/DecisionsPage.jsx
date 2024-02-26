@@ -17,7 +17,7 @@ const DecisionsPage = () => {
   const [users, setUsers] = useState([])
   const [decisions, setDecisions] = useState([])
   const [decision, setDecision] = useState({})
-  const [org, setOrg] = useState({})
+  const [orgName, setOrgName] = useState({})
   const [loaded, setLoaded] = useState(false)
   const [error, setError] = useState('')
   const [selectedTemplate, setSelectedTemplate] = useState([]);
@@ -30,14 +30,14 @@ const DecisionsPage = () => {
 
   useEffect(() => {
     setDecision(Object.assign({}, decision, {
-      template_id: selectedTemplate[0]?.template_id,
-      user_email: selectedManager[0]?.email,
-      collaborators: selectedCollaborators.map(user => user.email)
+      template_id: selectedTemplate[0]?.id,
+      user_email: selectedManager[0]?.attributes.email,
+      collaborators: selectedCollaborators.map(user => user.attributes.email)
     }))
   }, [selectedTemplate, selectedManager, selectedCollaborators])
 
   useEffect(() => {
-    getInitDataRequest(setTemplates, setUsers, setOrg, setError, setLoaded)
+    getInitDataRequest(setTemplates, setUsers, setOrgName, setError, setLoaded)
   }, []);
 
   if(!loaded) return <Loader />
@@ -47,7 +47,7 @@ const DecisionsPage = () => {
     <div className="row d-flex justify-content-center align-items-center">
       <div className="col-md-8">
         <div>
-          <h6 className='mb-2 text-start'>Current org: {org?.name}</h6>
+          <h6 className='mb-2 text-start'>Current org: {orgName}</h6>
           <Form id="regForm">
             <h1 className='red-violet'>Cloverpop Decisions Api</h1>
             <Form.Group className='mb-2 text-start'>
@@ -65,7 +65,7 @@ const DecisionsPage = () => {
               <Form.Label className='fs-6 mb-0'>Base template</Form.Label>
               <Typeahead
                 id="typeahead-template"
-                labelKey={option => option?.description}
+                labelKey={option => option?.attributes.description}
                 onChange={setSelectedTemplate}
                 options={templates || []}
                 placeholder="Select a template..."
@@ -77,7 +77,7 @@ const DecisionsPage = () => {
               <Form.Label className='fs-6 mb-0'>Decision manager</Form.Label>
               <Typeahead
                 id="typeahead-users"
-                labelKey={user => `${user.name}`}
+                labelKey={user => `${user.attributes.name}`}
                 onChange={setSelectedManager}
                 options={users || []}
                 placeholder="Select a user..."
@@ -90,7 +90,7 @@ const DecisionsPage = () => {
               <Typeahead
                 id="typeahead-collaborators"
                 multiple
-                labelKey={user => `${user.name}`}
+                labelKey={user => `${user.attributes.name}`}
                 onChange={setSelectedCollaborators}
                 options={users || []}
                 placeholder="Select collaborators of decision..."

@@ -8,17 +8,19 @@ const createCsrfToken = () => {
   axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken
 }
 
-export const getInitDataRequest = (setTemplates, setUsers, setOrg, setError, setLoaded) => {
+export const getInitDataRequest = (setTemplates, setUsers, setOrgName, setError, setLoaded) => {
   axios.get(INIT_DATA_URL)
     .then(response => {
-      const {templates, users, org, error} = response.data.data
-      setTemplates(templates)
-      setUsers(users)
-      setOrg(org)
-      setError(error)
+      const data = response.data.data.data.attributes
+      setTemplates(data.templates.data)
+      setUsers(data.org_users.data)
+      setOrgName(data.name)
       setLoaded(true)
     })
-    .catch(error => {console.error('Error:', error);});
+    .catch(error => {
+      setError(error)
+      console.error('Error:', error)
+    });
 }
 
 export const createDecisionRequest = (decision, setDecisions, setLoaded, setDecision, setError,
@@ -29,8 +31,8 @@ export const createDecisionRequest = (decision, setDecisions, setLoaded, setDeci
 
   axios.post(CREATE_DECISION_URL, { decision })
     .then(response => {
-      const {decision, error} = response.data.data
-      setDecisions(prev => [decision, ...prev])
+      const {data, error} = response.data.data
+      setDecisions(prev => [data, ...prev])
       setError(error)
       setDecision({})
       setSelectedUser([])
