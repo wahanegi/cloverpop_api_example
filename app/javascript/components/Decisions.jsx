@@ -7,8 +7,8 @@ const Decisions = ({ decisions }) =>
     {isPresent(decisions) && (
       <div className='mb-3'>
         <h4 className='mt-3 text-center'>Decisions</h4>
-        {decisions.map((decision, index) => {
-          const {description, decision_url} = decision.attributes
+        {decisions.map((data, index) => {
+          const {description, decision_url} = data.attributes
           return <div
             className='card py-1 px-3 m-2 mx-auto'
             style={{ borderRadius: 8 }}

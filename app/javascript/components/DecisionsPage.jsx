@@ -16,7 +16,7 @@ const DecisionsPage = () => {
   const [templates, setTemplates] = useState([])
   const [users, setUsers] = useState([])
   const [decisions, setDecisions] = useState([])
-  const [decision, setDecision] = useState({})
+  const [decision, setDecision] = useState({attributes: {}, relationships: {} })
   const [orgName, setOrgName] = useState({})
   const [loaded, setLoaded] = useState(false)
   const [error, setError] = useState('')
@@ -25,14 +25,24 @@ const DecisionsPage = () => {
   const [selectedCollaborators, setSelectedCollaborators] = useState([]);
 
   const onChangeDecision = (e) => {
-    setDecision(Object.assign({}, decision, {[e.target.name]: e.target.value}))
+    setDecision(Object.assign({}, decision, { attributes: {[e.target.name]: e.target.value} }))
   }
 
   useEffect(() => {
     setDecision(Object.assign({}, decision, {
-      template_id: selectedTemplate[0]?.id,
-      user_email: selectedManager[0]?.attributes.email,
-      collaborators: selectedCollaborators.map(user => user.attributes.email)
+      relationships: {
+        template: {
+          data: { type: "template", id: selectedTemplate[0]?.id }
+        },
+        user: {
+          data: { type: "org_user", id: selectedManager[0]?.id }
+        },
+        collaborators: selectedCollaborators.map(user => {
+          return {
+            data: { type: "org_user", id: user.id }
+          }
+        })
+      }
     }))
   }, [selectedTemplate, selectedManager, selectedCollaborators])
 
@@ -56,7 +66,7 @@ const DecisionsPage = () => {
                 type="text" maxLength={100}
                 placeholder="Add description"
                 name="description"
-                value = {decision.description || ''}
+                value = {decision.attributes?.description || ''}
                 onChange={onChangeDecision}
               />
             </Form.Group>
@@ -65,7 +75,7 @@ const DecisionsPage = () => {
               <Form.Label className='fs-6 mb-0'>Base template</Form.Label>
               <Typeahead
                 id="typeahead-template"
-                labelKey={option => option?.attributes.description}
+                labelKey={option => option?.attributes?.description}
                 onChange={setSelectedTemplate}
                 options={templates || []}
                 placeholder="Select a template..."
@@ -100,7 +110,7 @@ const DecisionsPage = () => {
 
             <div className='mt-3 text-end'>
               <BtnPrimary text='Create Decision'
-                          disabled={isBlank(decision.description) || isBlank(decision.template_id) || isBlank(decision.user_email)}
+                          disabled={isBlank(decision.attributes?.description) || isBlank(decision.relationships.template.data.id) || isBlank(decision.relationships.user.data.id)}
                           onClick={() => createDecisionRequest(
                             decision, setDecisions, setLoaded, setDecision, setError,
                             setSelectedTemplate, setSelectedManager, setSelectedCollaborators

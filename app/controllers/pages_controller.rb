@@ -14,7 +14,7 @@ class PagesController < ApplicationController
   end
 
   def create_decision
-    body = { decision: params['decision'] }
+    body = { data: params['decision'] }
     make_api_request(DECISIONS_API_URL, :post, body)
   end
 
