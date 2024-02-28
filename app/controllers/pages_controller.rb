@@ -3,7 +3,7 @@
 class PagesController < ApplicationController
   include HTTParty
 
-  ORG_API_URL = "#{ENV['CLOVERPOP_DOMAIN']}/api/v1/orgs/show".freeze
+  ORG_API_URL = "#{ENV['CLOVERPOP_DOMAIN']}/api/v1/organization?include=org_users,templates".freeze
   DECISIONS_API_URL = "#{ENV['CLOVERPOP_DOMAIN']}/api/v1/decisions".freeze
   CLOVERPOP_ORG_API_TOKEN = ENV['CLOVERPOP_ORG_API_TOKEN'].freeze
 

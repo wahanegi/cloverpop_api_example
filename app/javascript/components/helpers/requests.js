@@ -11,15 +11,18 @@ const createCsrfToken = () => {
 export const getInitDataRequest = (setTemplates, setUsers, setOrgName, setError, setLoaded) => {
   axios.get(INIT_DATA_URL)
     .then(response => {
-      const data = response.data.data.data.attributes
-      setTemplates(data.templates.data)
-      setUsers(data.org_users.data)
-      setOrgName(data.name)
-      setLoaded(true)
+      const {data, included} = response.data.data;
+      const templates = included.filter(item => item.type === 'template');
+      const orgUsers = included.filter(item => item.type === 'org_user');
+
+      setTemplates(templates);
+      setUsers(orgUsers);
+      setOrgName(data.attributes.name);
+      setLoaded(true);
     })
     .catch(error => {
-      setError(error)
-      console.error('Error:', error)
+      setError(error);
+      console.error('Error:', error);
     });
 }
 
