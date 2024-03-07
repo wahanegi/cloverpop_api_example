@@ -3,8 +3,8 @@
 class PagesController < ApplicationController
   include HTTParty
 
-  ORG_API_URL = "#{ENV['CLOVERPOP_DOMAIN']}/api/v1/organization?include=org_users,templates".freeze
-  DECISIONS_API_URL = "#{ENV['CLOVERPOP_DOMAIN']}/api/v1/decisions".freeze
+  ORG_API_URL = "#{ENV['CLOVERPOP_DOMAIN']}/api/v1/#{ENV['API_DECISIONS_PATH']}/organization?include=org_users,templates".freeze
+  DECISIONS_API_URL = "#{ENV['CLOVERPOP_DOMAIN']}/api/v1/#{ENV['API_DECISIONS_PATH']}/decisions".freeze
   CLOVERPOP_ORG_API_TOKEN = ENV['CLOVERPOP_ORG_API_TOKEN'].freeze
 
   def home; end

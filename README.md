@@ -27,19 +27,20 @@ The Cloverpop Api is built on:
 ## Setup
 Before using the `PagesController`, make sure you have the following environment variables set:
 - `CLOVERPOP_DOMAIN`: The base URL of the Cloverpop API.
-- `CLOVERPOP_ORG_API_TOKEN`: Your organization's API token for authentication.
+- `CLOVERPOP_ORG_API_TOKEN`: Your organization's API token for authentication. 
+- `API_DECISIONS_PATH`: external security path.
 
 ## Methods
 
 ### `init_data`
-- **Description**: Initiates data retrieval from the Cloverpop API.
+- **Description**: Initiates data depend on Org retrieval from the Cloverpop API.
 - **HTTP Method**: GET
-- **Endpoint**: `CLOVERPOP_DOMAIN/api/v1/decisions`
+- **Endpoint**: `{CLOVERPOP_DOMAIN}/api/v1/{API_DECISIONS_PATH}/decisions`
 
 ### `create_decision`
 - **Description**: Creates a new decision via the Cloverpop API.
 - **HTTP Method**: POST
-- **Endpoint**: `CLOVERPOP_DOMAIN/api/v1/decisions`
+- **Endpoint**: `{CLOVERPOP_DOMAIN}/api/v1/{API_DECISIONS_PATH}/decisions`
 - **Parameters**:
     - `decision`: The decision to be created, passed as a parameter.
 
