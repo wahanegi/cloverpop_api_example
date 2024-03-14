@@ -25,7 +25,7 @@ const DecisionsPage = () => {
   const [selectedCollaborators, setSelectedCollaborators] = useState([]);
 
   const onChangeDecision = (e) => {
-    setDecision(Object.assign({}, decision, { attributes: {[e.target.name]: e.target.value} }))
+    setDecision(Object.assign({}, decision, {type: 'Decision', attributes: {[e.target.name]: e.target.value} }))
   }
 
   useEffect(() => {
