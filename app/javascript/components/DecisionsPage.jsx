@@ -16,7 +16,7 @@ const DecisionsPage = () => {
   const [templates, setTemplates] = useState([])
   const [users, setUsers] = useState([])
   const [decisions, setDecisions] = useState([])
-  const [decision, setDecision] = useState({attributes: {}, relationships: {} })
+  const [decision, setDecision] = useState({attributes: {}, relationships: {}, type: 'Decision' })
   const [orgName, setOrgName] = useState({})
   const [loaded, setLoaded] = useState(false)
   const [error, setError] = useState('')
