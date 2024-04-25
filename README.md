@@ -18,7 +18,6 @@ The Cloverpop Api is built on:
 - [Error Handling](#error-handling)
 - [Security](#security)
 - [Start Rails server](#start-rails-server)
-- [GIT and Changing Code](#git)
 - [License](#license)
 
 ---
@@ -119,54 +118,8 @@ otherwise you won't be able to see your updated CSS and JavaScript
 
 NOTE: `rails s` - is not used
 
-## GIT
-
-### Beginner's Guide to Changing Code
-
-Every time you are ready to start work, do the following terminal commands in the vibereport directory:
-
-    $ git smart-pull
-    $ bundle
-    $ rails db:migrate
-Then if your server isn't started yet:
-
-[Start Rails server](#start-rails-server)
-
-
 At this point you can point your browser to http://localhost:3001/ and start development work.
 To stop the server click `CNTL-C` in all three tabs.
-
-To check to make sure your code changes didn't break anything critical:
-
-    $ rspec
-
-Green dots are good, red F's are bad. Note that sometimes other people may have broken the build, so use your best judgement if the automated test errors were caused by your code or not (for example if you undo changes and re-run the test).
-
-To push your code changes to the repo:
-
-        $ git add .
-        $ git commit -m "CI-XXX: Message describing what changes you made"
-        $ git push origin branch_name
-
-Note: replace XXX with the Jira story ID (very important).
-
-Switching between master and a private branch:
-
-        $ git checkout branch_name
-        $ git checkout master
-
-### Cherry Picking
-If you need to copy over a commit from one branch to another without merging:
-
-1. Copy the SHA of the commit you want to copy over (the program "tig" is good for this which can be installed via brew on a Mac).
-2. Go to the branch you want to copy the commit to ($ git checkout [BRANCHNAME])
-3. Use cherry-pick to copy over the commit:
-
-        $ git cherry-pick [SHA]
-
-NOTE: If you have more than one commit to copy over, do the cherry-pick commands in the same order as they were commited.
-Also be careful about doing this if there is a high possibility of there being a conflict.
-See https://ariejan.net/2010/06/10/cherry-picking-specific-commits-from-another-branch/
 
 ## License
 
