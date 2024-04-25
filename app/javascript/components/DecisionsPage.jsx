@@ -30,6 +30,7 @@ const DecisionsPage = () => {
 
   useEffect(() => {
     setDecision(Object.assign({}, decision, {
+      type: 'Decision',
       relationships: {
         template: {
           data: { type: "template", id: selectedTemplate[0]?.id }

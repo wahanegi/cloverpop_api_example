@@ -12,79 +12,99 @@ The Cloverpop Api is built on:
 ---
 
 ## Table of Contents
-- [Setup](#setup)
+- [Secrets](#secrets)
 - [Methods](#methods)
 - [Usage](#usage)
 - [Error Handling](#error-handling)
 - [Security](#security)
-- [New Development Machine Install (Mac)](#new-development-machine-install-mac)
 - [Start Rails server](#start-rails-server)
-- [GIT and Changing Code](#git)
 - [License](#license)
 
 ---
 
-## Setup
-Before using the `PagesController`, make sure you have the following environment variables set:
-- `CLOVERPOP_DOMAIN`: The base URL of the Cloverpop API.
-- `CLOVERPOP_ORG_API_TOKEN`: Your organization's API token for authentication. 
-- `API_DECISIONS_PATH`: external security path.
+## Secrets
+Make sure you have the following environment variables set. For security reasons they should not be saved in your code base.
+- `CLOVERPOP_DOMAIN` - the base URL of the Cloverpop API.
+- `CLOVERPOP_ORG_API_TOKEN` - your organization's API token for authentication. 
+- `API_DECISIONS_PATH` - external security path.
 
 ## Methods
 
-### `init_data`
-- **Description**: Initiates data depend on Org retrieval from the Cloverpop API.
+### [init_data](https://github.com/wahanegi/cloverpop_api_example/blob/master/app/controllers/pages_controller.rb#L12)
+- **Description**: Retrieves organization data from the Cloverpop API.
+The returned data includes information about the organization, such as its ID, name, associated templates, and users.
+These data can be used to create a new decision.
 - **HTTP Method**: GET
-- **Endpoint**: `{CLOVERPOP_DOMAIN}/api/v1/{API_DECISIONS_PATH}/decisions`
+- **Endpoint**: `{CLOVERPOP_DOMAIN}/api/v1/{API_DECISIONS_PATH}/organization?include=org_users,templates`
 
-### `create_decision`
+### [create_decision](https://github.com/wahanegi/cloverpop_api_example/blob/master/app/controllers/pages_controller.rb#L16)
 - **Description**: Creates a new decision via the Cloverpop API.
 - **HTTP Method**: POST
 - **Endpoint**: `{CLOVERPOP_DOMAIN}/api/v1/{API_DECISIONS_PATH}/decisions`
-- **Parameters**:
-    - `decision`: The decision to be created, passed as a parameter.
+- **Request Body**: The request body includes information necessary for creating the decision, such as its description, app name, associated template, user, and collaborators.
+ ```json
+    {
+      "data": {
+        "type": "string",
+        "attributes": {
+          "description": "string",
+          "app_name": "string"
+        },
+        "relationships": {
+          "template": {
+            "data": {
+              "type": "string",
+              "id": "string"
+            }
+          },
+          "user": {
+            "data": {
+              "type": "string",
+              "id": "string"
+            }
+          },
+          "collaborators": [
+            {
+              "data": {
+                "type": "string",
+                "id": "string"
+              }
+            }
+          ]
+        }
+      }
+    }
+ ```
+- **Response**: Upon successful creation, the API returns information about the newly created decision, including its ID, description, and a link to view the decision in the Cloverpop application.
+ ```json
+  {
+    "data": {
+      "id": "ede45gh23bhd",
+      "type": "decision",
+      "attributes": {
+        "description": "Decision Title"
+      },
+      "links": {
+        "decision_url": "https://app.cloverpop.com/decisions/ede45gh23bhd/tree_viewer"
+      }
+    }
+  }
+ ```
 
 ## Usage
-To utilize the methods provided by the `PagesController`, follow these steps:
-1. Ensure the required environment variables are correctly set in your application environment.
-2. Use the methods `init_data` and `create_decision` as needed within your application logic.
+To utilize this code in your own application, follow these steps:
+
+1. Ensure the required environment variables (secrets) are correctly set in your application environment.
+2. Look at the method/function [init_data](https://github.com/wahanegi/cloverpop_api_example/blob/master/app/controllers/pages_controller.rb#L12) to do an initial call to receive X and Y data from Cloverpop.
+3. Look at the method/function [create_decision](https://github.com/wahanegi/cloverpop_api_example/blob/master/app/controllers/pages_controller.rb#L16) to use parameters X and Y retrieved from init_data, with other fields A, B and C to create a new decision.
 
 ## Error Handling
 If an error occurs during an API request, the controller will log the error and return an appropriate JSON response with an error message.
 
 ## Security
-Ensure that sensitive information such as API tokens (`CLOVERPOP_ORG_API_TOKEN`) is handled securely and not exposed publicly.
+Ensure that sensitive information such as API tokens (`CLOVERPOP_ORG_API_TOKEN`, `API_DECISIONS_PATH`) are handled securely and not exposed publicly.
 
 ---
-
-## New Development Machine Install (Mac)
-
-*NOTE:* After installing something new, if something doesn't work like you expect, try quitting and restarting terminal.
-
-1. Install the latest version of XCode from the App store, run `$ xcode-select --install`
-2. Install the latest version of Homebrew: http://brew.sh
-3. Install Git on Mac using homebrew: `$ brew install git`
-4. Set your GIT username from terminal: `$ git config --global user.name "YOUR NAME"`
-5. Set your GIT email address from terminal: `$ git config --global user.email "YOUR EMAIL ADDRESS"`
-6. Generate and add SSH keys your Github account by following the instructions at https://help.github.com/articles/generating-ssh-keys/
-7. Install GPG using homebrew: `$ brew install gpg` (May be needed for RVM in next step)
-8. Install the latest version of RVM: https://rvm.io, but instead of `gpg2` Use `gpg` in the command that adds the GPG keys.  If this doesn't work check out the [security](http://rvm.io/rvm/security) page for a workaround.
-9. Install Ruby from terminal using RVM: `$ rvm install 3.1.2`
-10. Install posgtresql from terminal: `$ brew install postgresql` and follow on screen instructions (very important)
-11. Create postgresql superuser postgres: `$ createuser postgres -s`
-12. Change your directory to where you want your work projects in terminal and clone the git repo: `$ git@github.com:wahanegi/vibereport.git`
-13. Go into the directory `$ cd vibereport`. Confirm that when you run `$ rvm gemset list` it lists "vibereport" as your gemset.
-14. Run `$ gem install bundler`
-15. Run `$ gem update --system`
-16. Run bundler: `$ bundle`
-17. Install Yarn `$ brew install yarn`
-18. Install Webpack dependencies `yarn install`
-19. Create a new database: `$ rails db:create`
-20. Install the new Heroku CLI: `$ brew tap heroku/brew && brew install heroku`.
-21. Log into your Heroku account: `$ heroku login`
-22. Should be ready to roll: `$ rake assets:precompile` to start the Rails server use: `$ ./bin/dev`
-23. In Rubymine it's necessary to enable appropriate version of Javascript to make sure correct syntax highlighting.
-    `Rubymine` -> `Preferences` -> `Languages & Frameworks` -> `Javascript`: Then set `Javascript language version` to "ECMA Script 6"
 
 ## Start Rails server
 
@@ -98,54 +118,8 @@ otherwise you won't be able to see your updated CSS and JavaScript
 
 NOTE: `rails s` - is not used
 
-## GIT
-
-### Beginner's Guide to Changing Code
-
-Every time you are ready to start work, do the following terminal commands in the vibereport directory:
-
-    $ git smart-pull
-    $ bundle
-    $ rails db:migrate
-Then if your server isn't started yet:
-
-[Start Rails server](#start-rails-server)
-
-
 At this point you can point your browser to http://localhost:3001/ and start development work.
 To stop the server click `CNTL-C` in all three tabs.
-
-To check to make sure your code changes didn't break anything critical:
-
-    $ rspec
-
-Green dots are good, red F's are bad. Note that sometimes other people may have broken the build, so use your best judgement if the automated test errors were caused by your code or not (for example if you undo changes and re-run the test).
-
-To push your code changes to the repo:
-
-        $ git add .
-        $ git commit -m "CI-XXX: Message describing what changes you made"
-        $ git push origin branch_name
-
-Note: replace XXX with the Jira story ID (very important).
-
-Switching between master and a private branch:
-
-        $ git checkout branch_name
-        $ git checkout master
-
-### Cherry Picking
-If you need to copy over a commit from one branch to another without merging:
-
-1. Copy the SHA of the commit you want to copy over (the program "tig" is good for this which can be installed via brew on a Mac).
-2. Go to the branch you want to copy the commit to ($ git checkout [BRANCHNAME])
-3. Use cherry-pick to copy over the commit:
-
-        $ git cherry-pick [SHA]
-
-NOTE: If you have more than one commit to copy over, do the cherry-pick commands in the same order as they were commited.
-Also be careful about doing this if there is a high possibility of there being a conflict.
-See https://ariejan.net/2010/06/10/cherry-picking-specific-commits-from-another-branch/
 
 ## License
 
